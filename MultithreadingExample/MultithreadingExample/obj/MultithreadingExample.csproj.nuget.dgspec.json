@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mmose\\OneDrive - HTL Krems\\Schule\\Desktop\\SCHULE\\25-26\\SEW\\MultithreadingExample\\MultithreadingExample\\MultithreadingExample.csproj": {}
+    "C:\\Users\\mmose\\OneDrive - HTL Krems\\Schule\\Desktop\\SCHULE\\25-26\\SEW\\SEW25-26\\MultithreadingExample\\MultithreadingExample\\MultithreadingExample.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mmose\\OneDrive - HTL Krems\\Schule\\Desktop\\SCHULE\\25-26\\SEW\\MultithreadingExample\\MultithreadingExample\\MultithreadingExample.csproj": {
+    "C:\\Users\\mmose\\OneDrive - HTL Krems\\Schule\\Desktop\\SCHULE\\25-26\\SEW\\SEW25-26\\MultithreadingExample\\MultithreadingExample\\MultithreadingExample.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mmose\\OneDrive - HTL Krems\\Schule\\Desktop\\SCHULE\\25-26\\SEW\\MultithreadingExample\\MultithreadingExample\\MultithreadingExample.csproj",
+        "projectUniqueName": "C:\\Users\\mmose\\OneDrive - HTL Krems\\Schule\\Desktop\\SCHULE\\25-26\\SEW\\SEW25-26\\MultithreadingExample\\MultithreadingExample\\MultithreadingExample.csproj",
         "projectName": "MultithreadingExample",
-        "projectPath": "C:\\Users\\mmose\\OneDrive - HTL Krems\\Schule\\Desktop\\SCHULE\\25-26\\SEW\\MultithreadingExample\\MultithreadingExample\\MultithreadingExample.csproj",
+        "projectPath": "C:\\Users\\mmose\\OneDrive - HTL Krems\\Schule\\Desktop\\SCHULE\\25-26\\SEW\\SEW25-26\\MultithreadingExample\\MultithreadingExample\\MultithreadingExample.csproj",
         "packagesPath": "C:\\Users\\mmose\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mmose\\OneDrive - HTL Krems\\Schule\\Desktop\\SCHULE\\25-26\\SEW\\MultithreadingExample\\MultithreadingExample\\obj\\",
+        "outputPath": "C:\\Users\\mmose\\OneDrive - HTL Krems\\Schule\\Desktop\\SCHULE\\25-26\\SEW\\SEW25-26\\MultithreadingExample\\MultithreadingExample\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\mmose\\AppData\\Roaming\\NuGet\\NuGet.Config"
