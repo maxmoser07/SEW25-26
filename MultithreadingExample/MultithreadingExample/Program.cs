@@ -11,7 +11,7 @@ class Program
         int limit = 100000000;
         sw.Start();
 
-        List<int> primes = GetPrimesParallel(limit, 6);
+        List<int> primes = GetPrimesParallel(limit, 6); //Thread amount
 
         sw.Stop();
         Console.WriteLine($"Number of primes between 1 and {limit}: {primes.Count}");
