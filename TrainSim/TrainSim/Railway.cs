@@ -3,8 +3,26 @@
 public class Railway
 {
     Semaphore[] semaphores = new Semaphore[1];
-    
-    public void BuildTrack(int trackLength, char rail)
+    public char Rail { get; set; }
+    public string Train { get; set; }
+    public int TrackLength { get; set; }
+
+    // constructor
+    public Railway(char rail, string train)
+    {
+        Rail = rail;
+        Train = train;
+        TrackLength = 80;
+    }
+    public void BuildTrack()
+    {
+        BuildTrack(TrackLength, Rail);
+    }
+    public void RunTrain()
+    {
+        RunTrain(Train, TrackLength, Rail);
+    }
+    private void BuildTrack(int trackLength, char rail)
     {
         Console.WriteLine("\n");
         for (int i = 1; i < trackLength/10; i++)
@@ -35,6 +53,6 @@ public class Railway
         }
         Console.SetCursorPosition(tracklength-train.Length-1, 4);
         for (int i = 0; i < train.Length; i++)
-        Console.Write(rail);
+            Console.Write(rail);
     }
 }
