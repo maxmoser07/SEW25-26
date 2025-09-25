@@ -3,14 +3,16 @@
 public class Railway
 {
     Semaphore[] semaphores = new Semaphore[1];
-    public char Rail { get; set; }
+    private char Rail;
     public string Train { get; set; }
-    public int TrackLength { get; set; }
+    private int TrackLength;
+    
+    
 
     // constructor
-    public Railway(char rail, string train)
+    public Railway(string train)
     {
-        Rail = rail;
+        Rail = '#';
         Train = train;
         TrackLength = 80;
     }
