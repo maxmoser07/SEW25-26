@@ -5,85 +5,137 @@ namespace TrainSim
 {
     public class Railway
     {
-        private Semaphore[] semaphores;
-        private char Rail;
+        private readonly Semaphore[] semaphores;
+        private readonly char Rail;
         public string Train { get; set; }
-        private int TrackLength;
-        private int SectionLength => TrackLength / semaphores.Length;
+        private readonly int TrackLength;
+        private readonly int SectionCount;
+        private readonly int SectionLength;
 
-        public Railway(string train, int sections = 7, int trackLength = 80)
+        private const int Row = 3;            // train row
+        private const int SectionMarkRow = 1; // / or - row
+
+        public Railway(string train, int trackLength = 80)
         {
             Rail = '#';
             Train = train;
             TrackLength = trackLength;
 
-            // Create one semaphore per section
-            semaphores = new Semaphore[sections];
-            for (int i = 0; i < sections; i++)
+            SectionLength = train.Length * 2; // section approx twice train length
+            SectionCount = (TrackLength + SectionLength - 1) / SectionLength;
+
+            semaphores = new Semaphore[SectionCount];
+            for (int i = 0; i < SectionCount; i++)
                 semaphores[i] = new Semaphore(1, 1);
         }
 
         public void BuildTrack()
         {
-            Console.WriteLine("\n");
-            for (int i = 1; i < semaphores.Length; i++)
-                Console.Write("\t/   ");
             Console.WriteLine();
-            for (int i = 1; i < semaphores.Length; i++)
-                Console.Write($"\t|({i})");
-            Console.WriteLine();
+
+            // Draw section markers
+            for (int i = 0; i < SectionCount; i++)
+            {
+                int pos = i * SectionLength;
+                Console.SetCursorPosition(pos, SectionMarkRow);
+                Console.Write('/');
+            }
+
+            // Draw section numbers
+            for (int i = 0; i < SectionCount; i++)
+            {
+                int pos = i * SectionLength;
+                Console.SetCursorPosition(pos, SectionMarkRow + 1);
+                Console.Write($"|({i + 1})");
+            }
+
+            // Draw rail
+            Console.SetCursorPosition(0, Row);
             for (int i = 0; i < TrackLength; i++)
                 Console.Write(Rail);
         }
 
         public void RunTrain()
         {
+            RunTrain(500); // default clearance delay
+        }
+
+        private void RunTrain(int clearanceDelayMs)
+        {
             int trackEnd = TrackLength - Train.Length;
+            int currentSection = -1;
 
-            for (int pos = 0; pos <= trackEnd; pos++)
+            for (int pos = 0; pos <= trackEnd;)
             {
-                // Determine sections the train will occupy in the next move
-                int frontSection = pos / SectionLength;
-                int rearSection = (pos + Train.Length - 1) / SectionLength;
+                // Sections train will occupy
+                int front = pos;
+                int rear = pos + Train.Length - 1;
 
-                // Acquire all sections the train will occupy
-                for (int s = frontSection; s <= rearSection && s < semaphores.Length; s++)
-                    semaphores[s].WaitOne();
+                int nextFrontSection = front / SectionLength;
+                int nextRearSection = rear / SectionLength;
 
-                // Restore rail behind the train
-                if (pos > 0)
+                // Wait for all new sections before moving
+                for (int s = nextFrontSection; s <= nextRearSection; s++)
                 {
-                    lock (Console.Out)
+                    if (s != currentSection)
                     {
-                        Console.SetCursorPosition(pos - 1, 4);
-                        Console.Write(Rail);
+                        semaphores[s].WaitOne();
+
+                        // Visual: mark section as blocked
+                        lock (Console.Out)
+                        {
+                            Console.SetCursorPosition(s * SectionLength, SectionMarkRow);
+                            Console.Write('-');
+                        }
+
+                        // Release previous section
+                        if (currentSection != -1)
+                        {
+                            semaphores[currentSection].Release();
+                            Thread.Sleep(clearanceDelayMs); // section remains blocked briefly
+                            lock (Console.Out)
+                            {
+                                Console.SetCursorPosition(currentSection * SectionLength, SectionMarkRow);
+                                Console.Write('/');
+                            }
+                        }
+
+                        currentSection = s;
                     }
                 }
 
-                // Draw the train
+                // Draw train at current position
                 lock (Console.Out)
                 {
-                    Console.SetCursorPosition(pos, 4);
+                    if (pos > 0)
+                    {
+                        Console.SetCursorPosition(pos - 1, Row);
+                        Console.Write(Rail);
+                    }
+                    Console.SetCursorPosition(pos, Row);
                     Console.Write(Train);
                 }
 
-                Thread.Sleep(300);
-
-                // Release sections no longer occupied
-                int leaveSection = (pos - 1) / SectionLength;
-                if (leaveSection >= 0 && leaveSection < semaphores.Length)
-                    semaphores[leaveSection].Release();
+                Thread.Sleep(300); // train speed
+                pos++;
             }
 
-            // Release remaining sections at the end
-            int finalSection = (trackEnd) / SectionLength;
-            if (finalSection >= 0 && finalSection < semaphores.Length)
-                semaphores[finalSection].Release();
+            // Release last section
+            if (currentSection != -1)
+            {
+                semaphores[currentSection].Release();
+                Thread.Sleep(clearanceDelayMs);
+                lock (Console.Out)
+                {
+                    Console.SetCursorPosition(currentSection * SectionLength, SectionMarkRow);
+                    Console.Write('/');
+                }
+            }
 
-            // Restore the track where the train ended
+            // Restore rail at end
             lock (Console.Out)
             {
-                Console.SetCursorPosition(trackEnd, 4);
+                Console.SetCursorPosition(trackEnd, Row);
                 for (int i = 0; i < Train.Length; i++)
                     Console.Write(Rail);
             }
