@@ -23,7 +23,7 @@ namespace TrainSim
             TrainSymbol = trainSymbol;
             TrackLength = trackLength;
 
-            SectionLength = 6; // fixed section size now (simpler)
+            SectionLength = 6;
             SectionCount = (TrackLength + SectionLength - 1) / SectionLength;
 
             semaphores = new Semaphore[SectionCount];
