@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace TrainSim
@@ -8,20 +7,23 @@ namespace TrainSim
     {
         private readonly Semaphore[] semaphores;
         private readonly char Rail;
-        public string Train { get; set; }
+        public char TrainSymbol { get; set; }
         private readonly int TrackLength;
         private readonly int SectionCount;
         private readonly int SectionLength;
 
-        private readonly List<IRailwayObserver> observers = new();
+        public event EventHandler<TrainMovedEventArgs>? TrainMoved;
+        public event EventHandler<SectionEventArgs>? SectionEntered;
+        public event EventHandler<SectionEventArgs>? SectionExited;
+        public event EventHandler<TrackBuiltEventArgs>? TrackBuilt;
 
-        public Railway(string train, int trackLength = 80)
+        public Railway(char trainSymbol = '>', int trackLength = 80)
         {
             Rail = '#';
-            Train = train;
+            TrainSymbol = trainSymbol;
             TrackLength = trackLength;
 
-            SectionLength = train.Length * 2; // section ≈ twice train length
+            SectionLength = 6; // fixed section size now (simpler)
             SectionCount = (TrackLength + SectionLength - 1) / SectionLength;
 
             semaphores = new Semaphore[SectionCount];
@@ -29,84 +31,42 @@ namespace TrainSim
                 semaphores[i] = new Semaphore(1, 1);
         }
 
-        // Observer management
-        public void Attach(IRailwayObserver observer)
-        {
-            observers.Add(observer);
-        }
-
-        public void Detach(IRailwayObserver observer)
-        {
-            observers.Remove(observer);
-        }
-
-        private void NotifyTrainMoved(int position)
-        {
-            foreach (var obs in observers)
-                obs.OnTrainMoved(Train, position);
-        }
-
-        private void NotifySectionEntered(int sectionIndex)
-        {
-            foreach (var obs in observers)
-                obs.OnSectionEntered(sectionIndex);
-        }
-
-        private void NotifySectionExited(int sectionIndex)
-        {
-            foreach (var obs in observers)
-                obs.OnSectionExited(sectionIndex);
-        }
-
-        private void NotifyTrackBuilt()
-        {
-            foreach (var obs in observers)
-                obs.OnTrackBuilt(SectionCount, SectionLength, TrackLength);
-        }
-
         public void BuildTrack()
         {
-            NotifyTrackBuilt();
+            TrackBuilt?.Invoke(this, new TrackBuiltEventArgs(SectionCount, SectionLength, TrackLength));
         }
 
         public void RunTrain()
         {
-            RunTrain(500); // default clearance delay
+            RunTrain(500);
         }
 
         private void RunTrain(int clearanceDelayMs)
         {
-            int trackEnd = TrackLength - Train.Length;
+            int trackEnd = TrackLength - 1;
             int currentSection = -1;
 
             for (int pos = 0; pos <= trackEnd;)
             {
-                int front = pos;
-                int rear = pos + Train.Length - 1;
+                int nextSection = pos / SectionLength;
 
-                int nextFrontSection = front / SectionLength;
-                int nextRearSection = rear / SectionLength;
-
-                for (int s = nextFrontSection; s <= nextRearSection; s++)
+                if (nextSection != currentSection)
                 {
-                    if (s != currentSection)
+                    semaphores[nextSection].WaitOne();
+                    SectionEntered?.Invoke(this, new SectionEventArgs(nextSection));
+
+                    if (currentSection != -1)
                     {
-                        semaphores[s].WaitOne();
-                        NotifySectionEntered(s);
-
-                        if (currentSection != -1)
-                        {
-                            semaphores[currentSection].Release();
-                            Thread.Sleep(clearanceDelayMs);
-                            NotifySectionExited(currentSection);
-                        }
-
-                        currentSection = s;
+                        semaphores[currentSection].Release();
+                        Thread.Sleep(clearanceDelayMs);
+                        SectionExited?.Invoke(this, new SectionEventArgs(currentSection));
                     }
+
+                    currentSection = nextSection;
                 }
 
-                NotifyTrainMoved(pos);
-                Thread.Sleep(300);
+                TrainMoved?.Invoke(this, new TrainMovedEventArgs(TrainSymbol.ToString(), pos));
+                Thread.Sleep(200);
                 pos++;
             }
 
@@ -114,7 +74,7 @@ namespace TrainSim
             {
                 semaphores[currentSection].Release();
                 Thread.Sleep(clearanceDelayMs);
-                NotifySectionExited(currentSection);
+                SectionExited?.Invoke(this, new SectionEventArgs(currentSection));
             }
         }
     }

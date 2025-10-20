@@ -2,7 +2,7 @@
 
 namespace TrainSim
 {
-    public class ConsoleDisplay : IRailwayObserver
+    public class ConsoleDisplay
     {
         private const int Row = 3;
         private const int SectionMarkRow = 1;
@@ -12,59 +12,66 @@ namespace TrainSim
         private int sectionLength;
         private int trackLength;
 
-        public void OnTrackBuilt(int sectionCount, int sectionLength, int trackLength)
+        public void Subscribe(Railway railway)
         {
-            this.sectionLength = sectionLength;
-            this.trackLength = trackLength;
+            railway.TrackBuilt += OnTrackBuilt;
+            railway.TrainMoved += OnTrainMoved;
+            railway.SectionEntered += OnSectionEntered;
+            railway.SectionExited += OnSectionExited;
+        }
+
+        private void OnTrackBuilt(object? sender, TrackBuiltEventArgs e)
+        {
+            sectionLength = e.SectionLength;
+            trackLength = e.TrackLength;
 
             Console.Clear();
             Console.WriteLine();
 
-            // Draw section markers
-            for (int i = 0; i < sectionCount; i++)
+            // Draw section markers and labels
+            for (int i = 0; i < e.SectionCount; i++)
             {
-                int pos = i * sectionLength;
+                int pos = i * e.SectionLength;
                 Console.SetCursorPosition(pos, SectionMarkRow);
                 Console.Write('/');
                 Console.SetCursorPosition(pos, SectionMarkRow + 1);
                 Console.Write($"|({i + 1})");
             }
 
-            // Draw rail
+            // Draw the rail line
             Console.SetCursorPosition(0, Row);
-            for (int i = 0; i < trackLength; i++)
+            for (int i = 0; i < e.TrackLength; i++)
                 Console.Write(Rail);
         }
 
-        public void OnTrainMoved(string train, int position)
+        private void OnTrainMoved(object? sender, TrainMovedEventArgs e)
         {
             lock (consoleLock)
             {
-                if (position > 0)
+                if (e.Position > 0)
                 {
-                    Console.SetCursorPosition(position - 1, Row);
+                    Console.SetCursorPosition(e.Position - 1, Row);
                     Console.Write(Rail);
                 }
-
-                Console.SetCursorPosition(position, Row);
-                Console.Write(train);
+                Console.SetCursorPosition(e.Position, Row);
+                Console.Write(e.TrainSymbol);
             }
         }
 
-        public void OnSectionEntered(int sectionIndex)
+        private void OnSectionEntered(object? sender, SectionEventArgs e)
         {
             lock (consoleLock)
             {
-                Console.SetCursorPosition(sectionIndex * sectionLength, SectionMarkRow);
+                Console.SetCursorPosition(e.SectionIndex * sectionLength, SectionMarkRow);
                 Console.Write('-');
             }
         }
 
-        public void OnSectionExited(int sectionIndex)
+        private void OnSectionExited(object? sender, SectionEventArgs e)
         {
             lock (consoleLock)
             {
-                Console.SetCursorPosition(sectionIndex * sectionLength, SectionMarkRow);
+                Console.SetCursorPosition(e.SectionIndex * sectionLength, SectionMarkRow);
                 Console.Write('/');
             }
         }

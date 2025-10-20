@@ -9,11 +9,11 @@ namespace TrainSim
         {
             var display = new ConsoleDisplay();
 
-            Railway railway1 = new Railway("7|=°>");
-            Railway railway2 = new Railway("<o=o>");
+            Railway railway1 = new Railway('>');
+            Railway railway2 = new Railway('>');
 
-            railway1.Attach(display);
-            railway2.Attach(display);
+            display.Subscribe(railway1);
+            display.Subscribe(railway2);
 
             railway1.BuildTrack();
 
@@ -21,7 +21,7 @@ namespace TrainSim
             Thread t2 = new Thread(railway2.RunTrain);
 
             t1.Start();
-            Thread.Sleep(3000); // delay to show train queuing
+            Thread.Sleep(2000); // small delay so trains queue
             t2.Start();
 
             t1.Join();
