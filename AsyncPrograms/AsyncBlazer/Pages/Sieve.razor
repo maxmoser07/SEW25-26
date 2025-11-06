@@ -1,0 +1,130 @@
+﻿@page "/sieve"
+@using AsyncBlazer.Services
+@using System.Linq
+
+<h3>Sieve Demo (AsyncPrograms)</h3>
+
+<div class="card p-4" style="max-width:600px;">
+    <div class="mb-3">
+        <label>Textbox1 (updates label1 live)</label>
+        <input class="form-control" @bind="TextBox1Text" />
+    </div>
+    <p><strong>label1:</strong> @Label1Text</p>
+
+    <div class="mb-3">
+        <label>Textbox2 (upper bound for sieve)</label>
+        <input class="form-control" type="number" @bind="UptoValue" />
+    </div>
+
+    <p><strong>label2:</strong> @Label2Text</p>
+
+    <div class="d-grid gap-2 mt-3">
+        <button class="btn btn-primary" @onclick="Button1_Click" disabled="@isRunning">Sieb ohne Thread</button>
+        <button class="btn btn-secondary" @onclick="Button2_Click" disabled="@isRunning">Sieb mit Thread</button>
+        <button class="btn btn-warning" @onclick="Button3_Click" disabled="@isRunning">Backgroundworker (simuliert)</button>
+        <button class="btn btn-success" @onclick="Button4_Click" disabled="@isRunning">Async Sieb</button>
+    </div>
+</div>
+
+@code {
+    private string TextBox1Value { get; set; } = string.Empty;
+    private string Label1Text { get; set; } = "label1";
+    private int UptoValue { get; set; } = 50000;
+    private string Label2Text { get; set; } = "label2";
+    private bool isRunning = false;
+    
+
+    // updates label1 live
+    private string TextBox1Text
+    {
+        get => TextBox1Value;
+        set
+        {
+            TextBox1Value = value;
+            Label1Text = value;
+        }
+    }
+
+    // sync - blocks UI
+    private void Button1_Click()
+    {
+        isRunning = true;
+        Label2Text = "..loading..";
+        var result = RunSieve(UptoValue);
+        Label2Text = result.ToString();
+        isRunning = false;
+    }
+
+    // still blocks UI (since WASM has no threads)
+    private async Task Button2_Click()
+    {
+        isRunning = true;
+        Label2Text = "..loading..";
+        int result = 0;
+        await Task.Run(() => result = RunSieve(UptoValue)); // runs on same thread
+        Label2Text = result.ToString();
+        isRunning = false;
+    }
+
+    // BackgroundWorker simulation — yields occasionally so UI stays responsive
+    private async Task Button3_Click()
+    {
+        isRunning = true;
+        Label2Text = "..loading..";
+        int result = await SieveAsync(UptoValue, yield: true);
+        Label2Text = result.ToString();
+        isRunning = false;
+    }
+
+    // Async/await sieve — same, yields control
+    private async Task Button4_Click()
+    {
+        isRunning = true;
+        Label2Text = "..loading..";
+        int result = await SieveAsync(UptoValue, yield: true);
+        Label2Text = result.ToString();
+        isRunning = false;
+    }
+
+    // Blocking sieve (used for button1/2)
+    private int RunSieve(int n)
+    {
+        bool[] isPrime = new bool[n + 1];
+        for (int i = 2; i <= n; i++) isPrime[i] = true;
+
+        for (int i = 2; i * i <= n; i++)
+        {
+            if (isPrime[i])
+            {
+                for (int j = i * i; j <= n; j += i)
+                    isPrime[j] = false;
+            }
+        }
+
+        return isPrime.Count(x => x);
+    }
+
+    // Async sieve (yields to UI)
+    private async Task<int> SieveAsync(int n, bool yield = false)
+    {
+        bool[] isPrime = new bool[n + 1];
+        for (int i = 2; i <= n; i++) isPrime[i] = true;
+
+        for (int i = 2; i * i <= n; i++)
+        {
+            if (isPrime[i])
+            {
+                for (int j = i * i; j <= n; j += i)
+                    isPrime[j] = false;
+            }
+
+            if (yield && i % 100 == 0)
+            {
+                // let the UI update and handle input
+                await Task.Yield();
+            }
+        }
+
+        return isPrime.Count(x => x);
+    }
+}

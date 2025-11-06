@@ -1,4 +1,8 @@
 is_global = true
+build_property.EnableAotAnalyzer = 
+build_property.EnableSingleFileAnalyzer = 
+build_property.EnableTrimAnalyzer = false
+build_property.IncludeAllContentForSelfExtract = 
 build_property.TargetFramework = net9.0
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = 
@@ -6,12 +10,12 @@ build_property.ProjectTypeGuids =
 build_property.InvariantGlobalization = false
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
-build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = browser
 build_property.RootNamespace = AsyncBlazer
 build_property.RootNamespace = AsyncBlazer
 build_property.ProjectDir = C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\AsyncPrograms\AsyncBlazer\
 build_property.EnableComHosting = 
-build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.EnableGeneratedComInterfaceComImportInterop = false
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
@@ -30,6 +34,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/AsyncPrograms/AsyncBlazer/Pages/Home.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9tZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/AsyncPrograms/AsyncBlazer/Pages/Sieve.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2lldmUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/AsyncPrograms/AsyncBlazer/Pages/Weather.razor]

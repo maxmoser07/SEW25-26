@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AsyncBlazer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+50f972ff24398f772ca0fb35eaee70c44a9fe99b")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+24a8f5e0a782e2b646d60fb27385a59ad983d8e4")]
 [assembly: System.Reflection.AssemblyProductAttribute("AsyncBlazer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AsyncBlazer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
