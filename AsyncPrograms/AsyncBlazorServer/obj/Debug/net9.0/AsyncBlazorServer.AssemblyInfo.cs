@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AsyncBlazorServer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1fcf490261c699c398175d3383fc1532e3b3272e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8622a742147121e7109da94f888ab0d388a7c57b")]
 [assembly: System.Reflection.AssemblyProductAttribute("AsyncBlazorServer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AsyncBlazorServer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
