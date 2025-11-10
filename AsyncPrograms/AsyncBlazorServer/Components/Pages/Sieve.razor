@@ -1,0 +1,133 @@
+﻿@page "/sieve"
+@using System.ComponentModel
+@using System.Threading
+@using System.Linq
+
+<h3>Sieve Demo (Blazor Server)</h3>
+
+<div class="card p-4" style="max-width:600px;">
+    <div class="mb-3">
+        <label>Textbox1 (updates label1 live)</label>
+        <input class="form-control" @bind="TextBox1Value" />
+    </div>
+    <p><strong>label1:</strong> @Label1Text</p>
+
+    <div class="mb-3">
+        <label>Textbox2 (upper bound for sieve)</label>
+        <input class="form-control" type="number" @bind="UptoValue" />
+    </div>
+
+    <p><strong>label2:</strong> @Label2Text</p>
+
+    <div class="d-grid gap-2 mt-3">
+        <button class="btn btn-primary" @onclick="Button1_Click" disabled="@isRunning">Sieb ohne Thread</button>
+        <button class="btn btn-secondary" @onclick="Button2_Click" disabled="@isRunning">Sieb mit Thread</button>
+        <button class="btn btn-warning" @onclick="Button3_Click" disabled="@isRunning">BackgroundWorker</button>
+        <button class="btn btn-success" @onclick="Button4_ClickAsync" disabled="@isRunning">Async Sieb</button>
+    </div>
+</div>
+
+@code {
+    private string TextBox1Value { get; set; } = string.Empty;
+    private string Label1Text { get; set; } = "label1";
+    private int UptoValue { get; set; } = 50000;
+    private string Label2Text { get; set; } = "label2";
+    private bool isRunning = false;
+
+    // updates label1 live
+    private string TextBox1
+    {
+        get => TextBox1Value;
+        set
+        {
+            TextBox1Value = value;
+            Label1Text = value;
+        }
+    }
+
+    // --- Button1: synchronous (blocks UI completely) ---
+    private void Button1_Click()
+    {
+        isRunning = true;
+        Label2Text = "..loading..";
+        var result = RunSieve(UptoValue);
+        Label2Text = result.ToString();
+        isRunning = false;
+    }
+
+    // --- Button2: runs in a separate Thread (UI remains responsive) ---
+    private void Button2_Click()
+    {
+        isRunning = true;
+        Label2Text = "..loading..";
+        int result = 0;
+
+        var thread = new Thread(() =>
+        {
+            result = RunSieve(UptoValue);
+            // need to marshal back to the Blazor sync context for UI update
+            InvokeAsync(() =>
+            {
+                Label2Text = result.ToString();
+                isRunning = false;
+                StateHasChanged();
+            });
+        });
+
+        thread.Start();
+    }
+
+    // --- Button3: BackgroundWorker (runs async, UI responsive) ---
+    private void Button3_Click()
+    {
+        isRunning = true;
+        Label2Text = "..loading..";
+        int result = 0;
+
+        BackgroundWorker worker = new BackgroundWorker();
+        worker.DoWork += (_, e) =>
+        {
+            result = RunSieve(UptoValue);
+            e.Result = result;
+        };
+        worker.RunWorkerCompleted += (_, e) =>
+        {
+            Label2Text = e.Result!.ToString()!;
+            isRunning = false;
+            InvokeAsync(StateHasChanged);
+        };
+
+        worker.RunWorkerAsync();
+    }
+
+    // --- Button4: async/await (Task-based) ---
+    private async Task Button4_ClickAsync()
+    {
+        isRunning = true;
+        Label2Text = "..loading..";
+
+        int result = 0;
+        await Task.Run(() => result = RunSieve(UptoValue));
+
+        Label2Text = result.ToString();
+        isRunning = false;
+    }
+
+    // --- Core logic ---
+    private int RunSieve(int n)
+    {
+        bool[] isPrime = new bool[n + 1];
+        for (int i = 2; i <= n; i++) isPrime[i] = true;
+
+        for (int i = 2; i * i <= n; i++)
+        {
+            if (isPrime[i])
+            {
+                for (int j = i * i; j <= n; j += i)
+                    isPrime[j] = false;
+            }
+        }
+
+        return isPrime.Count(x => x);
+    }
+}
