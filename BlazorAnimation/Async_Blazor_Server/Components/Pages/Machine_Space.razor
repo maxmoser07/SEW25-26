@@ -1,22 +1,27 @@
 @page "/machineAnimation"
-@using System.Reflection.PortableExecutable
-@using System.Threading
 @rendermode InteractiveServer
 
 <h2 class="text-xl mb-2">Prozess-Simulation</h2>
 
 <div class="sim-area">
     <img class="storage" src="storage.png" />
-    <img class="machineA @(machineAWorking ? "working" : "")" src="drilling.png" />
-    <img class="machineB @(machineBWorking ? "working" : "")" src="industrial-robot.png" />
+
+    <!-- Machine A with vertical movement -->
+    <img class="machineA @(machineAWorking ? "working" : "")" 
+         style="transform: translateY(@machineAYOffset);" 
+         src="drilling.png" />
+
+    <!-- Machine B with vertical movement -->
+    <img class="machineB @(machineBWorking ? "working" : "")"
+         style="transform: translateY(@machineBYOffset);"
+         src="industrial-robot.png" />
+
     <img class="crane" style="left:@craneXpx" src="construction.png" />
 </div>
 
 <button class="mt-3 p-2 bg-blue-600 text-white rounded" @onclick="StartSim">Start Simulation</button>
 
 @code {
-    public string TextLabel1 = "Bereit";
-
     // === Semaphore coordination ===
     static SemaphoreSlim semCrane;
     static SemaphoreSlim semA;
@@ -26,6 +31,11 @@
     // === Visual State ===
     bool machineAWorking = false;
     bool machineBWorking = false;
+
+    // NEW — Y offsets
+    string machineAYOffset = "0px";
+    string machineBYOffset = "0px";
+
     string craneXpx = "0px";
 
     async Task StartSim()
@@ -46,7 +56,7 @@
     public class MachineA
     {
         private readonly Machine_Space ui;
-        public MachineA(dynamic ui) => this.ui = ui;
+        public MachineA(Machine_Space ui) => this.ui = ui;
 
         public async Task Run()
         {
@@ -54,48 +64,76 @@
             {
                 await semA.WaitAsync();
                 await Process();
-                Console.WriteLine("MachineA done");
                 semCrane.Release();
             }
         }
 
         private async Task Process()
         {
+            // --- Move up ---
+            ui.machineAYOffset = "-25px";
+            await ui.InvokeAsync(ui.StateHasChanged);
+            await Task.Delay(300);
+
+            // --- Work ---
             ui.machineAWorking = true;
-            ui.InvokeAsync(ui.StateHasChanged);        
-            await Task.Delay(1000); // simulate processing
+            await ui.InvokeAsync(ui.StateHasChanged);
+            await Task.Delay(1000);
             ui.machineAWorking = false;
-            ui.InvokeAsync(ui.StateHasChanged);        
+
+            // --- Move down ---
+            ui.machineAYOffset = "0px";
+            await ui.InvokeAsync(ui.StateHasChanged);
+            await Task.Delay(300);
+
+            await ui.InvokeAsync(ui.StateHasChanged);
         }
     }
 
     // === MachineB ===
-    public class MachineB(Machine_Space ui)
+    public class MachineB
     {
+        private readonly Machine_Space ui;
+        public MachineB(Machine_Space ui) => this.ui = ui;
+
         public async Task Run()
         {
             while (true)
             {
                 await semB.WaitAsync();
                 await Process();
-                Console.WriteLine("MachineB done");
                 semReturn.Release();
             }
         }
 
         private async Task Process()
         {
+            // --- Move up ---
+            ui.machineBYOffset = "-25px";
+            await ui.InvokeAsync(ui.StateHasChanged);
+            await Task.Delay(300);
+
+            // --- Work ---
             ui.machineBWorking = true;
-            ui.InvokeAsync(ui.StateHasChanged);        
+            await ui.InvokeAsync(ui.StateHasChanged);
             await Task.Delay(1500);
             ui.machineBWorking = false;
-            ui.InvokeAsync(ui.StateHasChanged);        
+
+            // --- Move down ---
+            ui.machineBYOffset = "0px";
+            await ui.InvokeAsync(ui.StateHasChanged);
+            await Task.Delay(300);
+
+            await ui.InvokeAsync(ui.StateHasChanged);
         }
     }
 
     // === Crane ===
-    public class Crane(Machine_Space ui)
+    public class Crane
     {
+        private readonly Machine_Space ui;
+        public Crane(Machine_Space ui) => this.ui = ui;
+
         public async Task Run()
         {
             await semCrane.WaitAsync();
@@ -113,18 +151,9 @@
 
         public async Task Move(string from, string to, string newX)
         {
-            Console.WriteLine($"Crane moving {from} -> {to}");
             ui.craneXpx = newX;
-            try
-            {
-                ui.InvokeAsync(ui.StateHasChanged);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            await Task.Delay(800); // visual move time
+            await ui.InvokeAsync(ui.StateHasChanged);
+            await Task.Delay(800);
         }
     }
 }
@@ -141,14 +170,17 @@
     justify-content: space-between;
     padding: 0 20px;
 }
+
 .sim-area img {
     width: 60px;
-    transition: all 0.8s ease;
+    transition: all 0.4s ease; /* faster for "jumping" effect */
 }
+
 .machineA.working, .machineB.working {
     filter: drop-shadow(0 0 10px lime);
     transform: scale(1.1);
 }
+
 .crane {
     position: absolute;
     top: 10px;
