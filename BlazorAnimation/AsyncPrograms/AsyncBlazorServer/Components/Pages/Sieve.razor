@@ -1,0 +1,77 @@
+﻿@page "/sieve"
+
+<h3>Sieve Demo (Async & Live Updates)</h3>
+
+<div class="mb-3">
+    <label>Live Text:</label><br />
+    <input type="text" @bind="InputText" class="form-control" placeholder="Type something..." />
+    <p><strong>Label 1:</strong> @InputText</p>
+</div>
+
+<div class="mb-3">
+    <label>Calculate primes up to:</label><br />
+    <input type="number" @bind="UptoValue" class="form-control" />
+</div>
+
+<div class="mb-3">
+    <button class="btn btn-primary me-2" @onclick="RunSieve">Sieve (Blocking)</button>
+    <button class="btn btn-secondary me-2" @onclick="RunSieveThreaded">Sieve (Thread)</button>
+    <button class="btn btn-success me-2" @onclick="RunSieveAsync">Sieve (Async)</button>
+</div>
+
+<p><strong>Label 2 (Result):</strong> @Label2Text</p>
+
+@code {
+    private string InputText = "";
+    private int UptoValue = 10000;
+    private string Label2Text = "";
+
+    // blocking version — UI freezes
+    private void RunSieve()
+    {
+        Label2Text = "..loading..";
+        StateHasChanged();
+
+        int result = RunSieveCalc(UptoValue);
+        Label2Text = result.ToString();
+    }
+
+    // threaded version — still blocks because of .Join()
+    private void RunSieveThreaded()
+    {
+        Label2Text = "..loading..";
+        StateHasChanged();
+
+        int result = 0;
+        var t = new Thread(() => result = RunSieveCalc(UptoValue));
+        t.Start();
+        t.Join();
+        Label2Text = result.ToString();
+    }
+
+    // async Task version — non-blocking, UI remains responsive
+    private async Task RunSieveAsync()
+    {
+        Label2Text = "..loading..";
+        StateHasChanged();
+
+        int result = await Task.Run(() => RunSieveCalc(UptoValue));
+        Label2Text = result.ToString();
+    }
+
+    private int RunSieveCalc(int n)
+    {
+        bool[] isPrime = new bool[n + 1];
+        for (int i = 2; i <= n; i++) isPrime[i] = true;
+
+        for (int i = 2; i * i <= n; i++)
+        {
+            if (isPrime[i])
+            {
+                for (int j = i * i; j <= n; j += i)
+                    isPrime[j] = false;
+            }
+        }
+        return isPrime.Count(x => x);
+    }
+}
