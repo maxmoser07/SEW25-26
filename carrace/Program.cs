@@ -1,67 +1,74 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Threading;
 
 namespace carrace;
 
 class Program
 {
+    // Start semaphore — cars wait until race starts
+    public static Semaphore StartSemaphore = new Semaphore(0, 100);
+    
+    public static Semaphore PitstopSemaphore = new Semaphore(5, 5);
+
     static void Main(string[] args)
     {
         Stopwatch stopwatch = new Stopwatch();
-        Car car1 = new Car("Car 1");
-        Car car2 = new Car("Car 2");
-        Car car3 = new Car("Car 3");
-        Car car4 = new Car("Car 4");
-        Car car5 = new Car("Car 5");
 
-        Thread thread1 = new Thread(new ThreadStart(car1.Run));
-        Thread thread2 = new Thread(new ThreadStart(car2.Run));
-        Thread thread3 = new Thread(new ThreadStart(car3.Run));
-        Thread thread4 = new Thread(new ThreadStart(car4.Run));
-        Thread thread5 = new Thread(new ThreadStart(car5.Run));
+        Car[] cars =
+        {
+            new Car("Kainz"),
+            new Car("Car 2"),
+            new Car("Car 3"),
+            new Car("Car 4"),
+            new Car("Car 5")
+        };
+
+        Thread[] threads = cars
+            .Select(car => new Thread(car.Run))
+            .ToArray();
+
         stopwatch.Start();
-        thread1.Start();
-        thread2.Start();
-        thread3.Start();
-        thread4.Start();
-        thread5.Start();
 
-        thread1.Join();
-        thread2.Join();
-        thread3.Join();
-        thread4.Join();
-        thread5.Join();
+        // Start all threads (they will wait on semaphore)
+        foreach (var t in threads) t.Start();
+
+        // Let all cars start at once
+        Console.WriteLine(">>> Start signal given!");
+        StartSemaphore.Release(cars.Length);
+
+        // Wait for all cars
+        foreach (var t in threads) t.Join();
+
         stopwatch.Stop();
-        Console.WriteLine($"Race is over! it took {stopwatch.ElapsedMilliseconds} ms");
+        Console.WriteLine($"Race is over! It took {stopwatch.ElapsedMilliseconds} ms\n");
         
-        F1Car f1car1 = new F1Car("F1 Car 1");
-        F1Car f1car2 = new F1Car("F1 Car 2");
-        F1Car f1car3 = new F1Car("F1 Car 3");
-        F1Car f1car4 = new F1Car("F1 Car 4");
-        F1Car f1car5 = new F1Car("F1 Car 5");
-        
-        Thread f1thread1 = new Thread(new ThreadStart(f1car1.Run));
-        Thread f1thread2 = new Thread(new ThreadStart(f1car2.Run));
-        Thread f1thread3 = new Thread(new ThreadStart(f1car3.Run));
-        Thread f1thread4 = new Thread(new ThreadStart(f1car4.Run));
-        Thread f1thread5 = new Thread(new ThreadStart(f1car5.Run));
-        
+        // F1 Race
+
+        F1Car[] f1cars =
+        {
+            new F1Car("F1 Car 1"),
+            new F1Car("F1 Car 2"),
+            new F1Car("F1 Car 3"),
+            new F1Car("F1 Car 4"),
+            new F1Car("F1 Car 5")
+        };
+
+        Thread[] f1threads = f1cars
+            .Select(car => new Thread(car.Run))
+            .ToArray();
+
         stopwatch.Reset();
         stopwatch.Start();
-        
-        f1thread1.Start();
-        f1thread2.Start();
-        f1thread3.Start();
-        f1thread4.Start();
-        f1thread5.Start();
-        
-        f1thread1.Join();
-        f1thread2.Join();
-        f1thread3.Join();
-        f1thread4.Join();
-        f1thread5.Join();
-        
+
+        foreach (var t in f1threads) t.Start();
+
+        Console.WriteLine(">>> F1 Start signal given!");
+        StartSemaphore.Release(f1cars.Length);
+
+        foreach (var t in f1threads) t.Join();
+
         stopwatch.Stop();
-        
-        Console.WriteLine($"F1 Race is over! it took {stopwatch.ElapsedMilliseconds} ms");
+        Console.WriteLine($"F1 Race is over! It took {stopwatch.ElapsedMilliseconds} ms");
     }
 }

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("carrace")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cab27ddbcd754c16852d785026d4a097931cc5cc")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+194c7ff61cd39f82d0ca72774c194a0dddf5af79")]
 [assembly: System.Reflection.AssemblyProductAttribute("carrace")]
 [assembly: System.Reflection.AssemblyTitleAttribute("carrace")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
