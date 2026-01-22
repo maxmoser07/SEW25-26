@@ -1,0 +1,2 @@
+#dotnet ef dbcontext scaffold "Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=Chinook" Microsoft.EntityFrameworkCore.SqlServer
+dotnet-ef dbcontext scaffold "server=127.0.0.1;uid=root;pwd=insy;database=demo" Mysql.EntityFrameworkCore
