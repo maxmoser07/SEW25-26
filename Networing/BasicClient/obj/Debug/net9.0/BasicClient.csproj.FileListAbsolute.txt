@@ -1,15 +1,30 @@
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\bin\Debug\net9.0\BasicClient.exe
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\bin\Debug\net9.0\BasicClient.deps.json
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\bin\Debug\net9.0\BasicClient.runtimeconfig.json
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\bin\Debug\net9.0\BasicClient.dll
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\bin\Debug\net9.0\BasicClient.pdb
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\obj\Debug\net9.0\BasicClient.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\obj\Debug\net9.0\BasicClient.AssemblyInfoInputs.cache
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\obj\Debug\net9.0\BasicClient.AssemblyInfo.cs
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\obj\Debug\net9.0\BasicClient.csproj.CoreCompileInputs.cache
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\obj\Debug\net9.0\BasicClient.sourcelink.json
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\obj\Debug\net9.0\BasicClient.dll
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\obj\Debug\net9.0\refint\BasicClient.dll
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\obj\Debug\net9.0\BasicClient.pdb
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\obj\Debug\net9.0\BasicClient.genruntimeconfig.cache
-C:\Users\mmose\OneDrive - HTL Krems\Schule\Desktop\SCHULE\25-26\SEW\SEW25-26\Networing\BasicClient\obj\Debug\net9.0\ref\BasicClient.dll
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/bin/Debug/net9.0/BasicClient.exe
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/bin/Debug/net9.0/BasicClient.deps.json
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/bin/Debug/net9.0/BasicClient.runtimeconfig.json
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/bin/Debug/net9.0/BasicClient.dll
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/bin/Debug/net9.0/BasicClient.pdb
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.GeneratedMSBuildEditorConfig.editorconfig
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.AssemblyInfoInputs.cache
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.AssemblyInfo.cs
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.csproj.CoreCompileInputs.cache
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.sourcelink.json
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.dll
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/refint/BasicClient.dll
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.pdb
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.genruntimeconfig.cache
+C:/Users/mmose/OneDrive - HTL Krems/Schule/Desktop/SCHULE/25-26/SEW/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/ref/BasicClient.dll
+/home/max/School/sew/SEW25-26/Networing/BasicClient/bin/Debug/net9.0/BasicClient
+/home/max/School/sew/SEW25-26/Networing/BasicClient/bin/Debug/net9.0/BasicClient.deps.json
+/home/max/School/sew/SEW25-26/Networing/BasicClient/bin/Debug/net9.0/BasicClient.runtimeconfig.json
+/home/max/School/sew/SEW25-26/Networing/BasicClient/bin/Debug/net9.0/BasicClient.dll
+/home/max/School/sew/SEW25-26/Networing/BasicClient/bin/Debug/net9.0/BasicClient.pdb
+/home/max/School/sew/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.GeneratedMSBuildEditorConfig.editorconfig
+/home/max/School/sew/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.AssemblyInfoInputs.cache
+/home/max/School/sew/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.AssemblyInfo.cs
+/home/max/School/sew/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.csproj.CoreCompileInputs.cache
+/home/max/School/sew/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.sourcelink.json
+/home/max/School/sew/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.dll
+/home/max/School/sew/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/refint/BasicClient.dll
+/home/max/School/sew/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.pdb
+/home/max/School/sew/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/BasicClient.genruntimeconfig.cache
+/home/max/School/sew/SEW25-26/Networing/BasicClient/obj/Debug/net9.0/ref/BasicClient.dll

@@ -1,61 +1,42 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using System.Net;
+﻿using System.Net;
 using System.Net.Sockets;
 
-int anz = 5;
-TcpListener lsnr = new TcpListener(IPAddress.Loopback,2025);
+// 1. Define a safe root directory in your Home folder
+string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+string sharedFolder = Path.Combine(homeDir, "TcpShared");
 
+if (!Directory.Exists(sharedFolder)) Directory.CreateDirectory(sharedFolder);
+
+TcpListener lsnr = new TcpListener(IPAddress.Any, 2025);
+lsnr.Server.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 lsnr.Start();
+Console.WriteLine($"Server started. Monitoring: {sharedFolder}");
 
-Console.WriteLine("Listening on Port 2025");
-
-for (int i = 0; i < anz; i++)
+while (true)
 {
-    new Thread(() => StatelessFileServer()).Start();
-}
+    using TcpClient client = lsnr.AcceptTcpClient();
+    using NetworkStream stream = client.GetStream();
+    
+    StreamReader sr = new StreamReader(stream);
+    string? requestedFile = sr.ReadLine();
 
-void StatelessFileServer()
-{
-    while (true)
+    if (!string.IsNullOrEmpty(requestedFile))
     {
-        Socket soc = lsnr.AcceptSocket();
-        Console.WriteLine($"Connection from {soc.RemoteEndPoint}");
+        // 2. Path.GetFileName strips out any "../" path traversal attempts
+        string fileNameOnly = Path.GetFileName(requestedFile);
+        string fullPath = Path.Combine(sharedFolder, fileNameOnly);
 
-        Stream s = new NetworkStream(soc);
-        StreamReader sr = new StreamReader(s);
-        StreamWriter sw = new StreamWriter(s);
-        sw.AutoFlush = true;
-        
-        string input = sr.ReadLine();
-        
-        string content = File.ReadAllText(input);
-        
-        sw.Write(content);
-        soc.Close();
-        
+        // Linux is case-sensitive! Image.png != image.png
+        if (File.Exists(fullPath))
+        {
+            Console.WriteLine($"Sending: {fullPath}");
+            using FileStream fs = File.OpenRead(fullPath);
+            fs.CopyTo(stream);
+            stream.Flush();
+        }
+        else
+        {
+            Console.WriteLine($"File not found (Check casing): {fullPath}");
+        }
     }
 }
-
-void StatelessEchoServer()
-{
-    while (true)
-    {
-        Socket soc = lsnr.AcceptSocket();
-        Console.WriteLine($"Connection from {soc.RemoteEndPoint}");
-
-        Stream s = new NetworkStream(soc);
-        StreamReader sr = new StreamReader(s);
-        StreamWriter sw = new StreamWriter(s);
-        sw.AutoFlush = true;
-        
-        string input = sr.ReadLine();
-        sw.Write(input.ToUpper());
-        sw.Flush();
-        soc.Close();
-        
-    }
-}
-
-
-Console.ReadKey();

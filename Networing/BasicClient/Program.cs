@@ -1,16 +1,30 @@
-﻿// See https://aka.ms/new-console-template for more information
+﻿using System.Net.Sockets;
 
-using System.Net.Sockets;
+try
+{
+    using TcpClient client = new TcpClient("127.0.0.1", 2025);
+    using NetworkStream stream = client.GetStream();
 
-TcpClient client = new TcpClient("localhost", 2025);
+    StreamWriter writer = new StreamWriter(stream) { AutoFlush = true };
+    Console.Write("Enter exact filename (Case Sensitive): ");
+    string? requestedFile = Console.ReadLine();
+    
+    if (string.IsNullOrEmpty(requestedFile)) return;
 
-Stream stream = client.GetStream();
+    writer.WriteLine(requestedFile);
 
-StreamReader reader = new StreamReader(stream);
-StreamWriter writer = new StreamWriter(stream);
+    // Save to the current directory where the app is running
+    string savePath = Path.Combine(Directory.GetCurrentDirectory(), "downloaded_" + requestedFile);
+    
+    using (FileStream fs = File.Create(savePath))
+    {
+        Console.WriteLine("Downloading from Fedora Server...");
+        stream.CopyTo(fs);
+    }
 
-writer.AutoFlush = true;
-writer.WriteLine(Console.ReadLine());
-
-string response = reader.ReadLine();
-Console.WriteLine($"Response from server: {response}");
+    Console.WriteLine($"Success! Saved to: {savePath}");
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"Connection Error: {ex.Message}");
+}
