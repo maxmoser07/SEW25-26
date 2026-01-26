@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "f4qBND4qb+s=",
+  "success": true,
+  "projectFilePath": "/home/max/School/sew/SEW25-26/Networing/BasicServer/BasicServer.csproj",
+  "expectedPackageFiles": [
+    "/home/max/.nuget/packages/microsoft.netcore.app.ref/9.0.11/microsoft.netcore.app.ref.9.0.11.nupkg.sha512",
+    "/home/max/.nuget/packages/microsoft.aspnetcore.app.ref/9.0.11/microsoft.aspnetcore.app.ref.9.0.11.nupkg.sha512",
+    "/home/max/.nuget/packages/microsoft.netcore.app.host.linux-x64/9.0.11/microsoft.netcore.app.host.linux-x64.9.0.11.nupkg.sha512"
+  ],
+  "logs": []
+}
