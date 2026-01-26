@@ -18,25 +18,26 @@ while (true)
     using NetworkStream stream = client.GetStream();
     
     StreamReader sr = new StreamReader(stream);
+    // Inside your Server loop
     string? requestedFile = sr.ReadLine();
-
     if (!string.IsNullOrEmpty(requestedFile))
     {
-        // 2. Path.GetFileName strips out any "../" path traversal attempts
-        string fileNameOnly = Path.GetFileName(requestedFile);
-        string fullPath = Path.Combine(sharedFolder, fileNameOnly);
-
-        // Linux is case-sensitive! Image.png != image.png
+        // Use Path.GetFullPath to see exactly where the server is looking
+        string fullPath = Path.Combine(Directory.GetCurrentDirectory(), requestedFile);
+    
         if (File.Exists(fullPath))
         {
-            Console.WriteLine($"Sending: {fullPath}");
+            Console.WriteLine($"[SUCCESS] Sending {fullPath} ({new FileInfo(fullPath).Length} bytes)");
             using FileStream fs = File.OpenRead(fullPath);
             fs.CopyTo(stream);
-            stream.Flush();
+            stream.Flush(); // Ensure every byte is pushed out
         }
         else
         {
-            Console.WriteLine($"File not found (Check casing): {fullPath}");
+            // THIS IS THE IMPORTANT PART:
+            Console.WriteLine($"[ERROR] File NOT found at: {fullPath}");
+            Console.WriteLine("Check your casing! Linux is case-sensitive.");
         }
     }
+    
 }

@@ -13,16 +13,26 @@ try
 
     writer.WriteLine(requestedFile);
 
-    // Save to the current directory where the app is running
-    string savePath = Path.Combine(Directory.GetCurrentDirectory(), "downloaded_" + requestedFile);
-    
-    using (FileStream fs = File.Create(savePath))
+// Look for data BEFORE creating the file
+    if (stream.CanRead)
     {
-        Console.WriteLine("Downloading from Fedora Server...");
-        stream.CopyTo(fs);
+        // Check if there is actually data waiting
+        // We create the file ONLY when we start receiving bytes
+        string savePath = Path.Combine(Directory.GetCurrentDirectory(), "downloaded_" + requestedFile);
+    
+        using (FileStream fs = File.Create(savePath))
+        {
+            Console.WriteLine("Receiving data...");
+            stream.CopyTo(fs);
+        
+            // If the file is still 0 bytes, the server found nothing
+            if (fs.Length == 0) 
+            {
+                Console.WriteLine("Warning: Received 0 bytes. Check server logs.");
+            }
+            Console.WriteLine($"Success! Saved to: {savePath}");
+        }
     }
-
-    Console.WriteLine($"Success! Saved to: {savePath}");
 }
 catch (Exception ex)
 {
