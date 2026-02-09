@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 
-// 1. Define a safe root directory in your Home folder
 string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 string sharedFolder = Path.Combine(homeDir, "TcpShared");
 
@@ -18,25 +17,26 @@ while (true)
     using NetworkStream stream = client.GetStream();
     
     StreamReader sr = new StreamReader(stream);
-    // Inside your Server loop
-    string? requestedFile = sr.ReadLine();
+    string? requestedFile = sr.ReadLine(); 
+
     if (!string.IsNullOrEmpty(requestedFile))
     {
-        // Use Path.GetFullPath to see exactly where the server is looking
         string fullPath = Path.Combine(Directory.GetCurrentDirectory(), requestedFile);
-    
-        if (File.Exists(fullPath))
+
+        if (File.Exists(fullPath) && fullPath.EndsWith(".html"))
         {
-            Console.WriteLine($"[SUCCESS] Sending {fullPath} ({new FileInfo(fullPath).Length} bytes)");
+            Console.WriteLine($"Serving HTML: {fullPath}");
+            
+            StreamWriter sw = new StreamWriter(stream);
+            
+            sw.WriteLine("HTTP/1.1 200 OK");
+            sw.WriteLine("Content-Type: text/html; charset=utf-8");
+            sw.WriteLine(""); // This empty line is REQUIRED to separate headers from content
+            sw.Flush(); 
+            
             using FileStream fs = File.OpenRead(fullPath);
             fs.CopyTo(stream);
-            stream.Flush(); // Ensure every byte is pushed out
-        }
-        else
-        {
-            // THIS IS THE IMPORTANT PART:
-            Console.WriteLine($"[ERROR] File NOT found at: {fullPath}");
-            Console.WriteLine("Check your casing! Linux is case-sensitive.");
+            stream.Flush();
         }
     }
     
