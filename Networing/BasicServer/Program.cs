@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 
-// 1. Define a safe root directory in your Home folder
 string homeDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
 string sharedFolder = Path.Combine(homeDir, "TcpShared");
 
@@ -18,11 +17,9 @@ while (true)
     using NetworkStream stream = client.GetStream();
     
     StreamReader sr = new StreamReader(stream);
-    // Inside your Server loop
     string? requestedFile = sr.ReadLine();
     if (!string.IsNullOrEmpty(requestedFile))
     {
-        // Use Path.GetFullPath to see exactly where the server is looking
         string fullPath = Path.Combine(Directory.GetCurrentDirectory(), requestedFile);
     
         if (File.Exists(fullPath))
@@ -34,10 +31,10 @@ while (true)
         }
         else
         {
-            // THIS IS THE IMPORTANT PART:
             Console.WriteLine($"[ERROR] File NOT found at: {fullPath}");
             Console.WriteLine("Check your casing! Linux is case-sensitive.");
         }
     }
     
+
 }
