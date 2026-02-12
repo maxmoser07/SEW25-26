@@ -4,8 +4,19 @@ using Model.Entities;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+var allow = "allow_my_api";
 builder.Services.AddControllers();
+builder.Services.AddCors(
+    options => options.AddPolicy(
+        allow,
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:5021")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin();
+        })
+);
 builder.Services.AddDbContext<MyDbContext>();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddEndpointsApiExplorer();
@@ -21,7 +32,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseCors(allow);
 app.UseAuthorization();
 
 app.MapControllers();

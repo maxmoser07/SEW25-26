@@ -1,0 +1,44 @@
+@page "/Demos"
+@inject HttpClient Http
+@using Model.Entities;
+
+<PageTitle>Demos</PageTitle>
+
+@if (demos == null)
+{
+    <p>
+        <em>
+            Loading...
+        </em>
+    </p>    
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var demo in demos)
+        {
+            <tr>
+                <td>@demo.Id</td>
+                <td>@demo.Value</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Demo[]? demos;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        string url = "http://localhost:5216";
+        demos = await Http.GetFromJsonAsync<Demo[]>($"{url}/api/demo");
+    }
+}
