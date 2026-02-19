@@ -6,39 +6,84 @@
 
 @if (demos == null)
 {
-    <p>
-        <em>
-            Loading...
-        </em>
-    </p>    
+    <p><em>Loading...</em></p>    
 }
 else
 {
+    @* --- CREATE --- *@
+    <div class="mb-4 p-3 border rounded">
+        <h5>Add New Entry</h5>
+        <div class="input-group">
+            <input @bind="newDemoValue" class="form-control" placeholder="Enter value..." />
+            <button class="btn btn-primary" @onclick="AddDemo">Add Demo</button>
+        </div>
+    </div>
+
+    @* --- READ, UPDATE, DELETE --- *@
     <table class="table">
         <thead>
-        <tr>
-            <th>Id</th>
-            <th>Value</th>
-        </tr>
+            <tr>
+                <th>Id</th>
+                <th>Value</th>
+                <th>Actions</th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var demo in demos)
-        {
-            <tr>
-                <td>@demo.Id</td>
-                <td>@demo.Value</td>
-            </tr>
-        }
+            @foreach (var demo in demos)
+            {
+                <tr>
+                    <td>@demo.Id</td>
+                    <td>
+                        <input @bind="demo.Value" class="form-control" />
+                    </td>
+                    <td>
+                        <button class="btn btn-success btn-sm" @onclick="() => UpdateDemo(demo)">Save</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => DeleteDemo(demo.Id)">Delete</button>
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
 }
 
 @code {
     private Demo[]? demos;
-    
+    private string newDemoValue = "";
+    // Note: Use the base URL matching your API
+    private string apiUrl = "http://localhost:5216/api/demo"; 
+
     protected override async Task OnInitializedAsync()
     {
-        string url = "http://localhost:5216";
-        demos = await Http.GetFromJsonAsync<Demo[]>($"{url}/api/demo");
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        demos = await Http.GetFromJsonAsync<Demo[]>(apiUrl); 
+    }
+
+    // CREATE: Calls POST api/Demo
+    private async Task AddDemo()
+    {
+        if (string.IsNullOrWhiteSpace(newDemoValue)) return;
+
+        var newDemo = new Demo { Value = newDemoValue };
+        await Http.PostAsJsonAsync(apiUrl, newDemo);
+        newDemoValue = ""; 
+        await LoadData(); 
+    }
+
+    // UPDATE: Calls PUT api/Demo/{id}
+    private async Task UpdateDemo(Demo demo)
+    {
+        await Http.PutAsJsonAsync($"{apiUrl}/{demo.Id}", demo);
+        await LoadData();
+    }
+
+    // DELETE: Calls DELETE api/Demo/{id}
+    private async Task DeleteDemo(int id)
+    {
+        await Http.DeleteAsync($"{apiUrl}/{id}");
+        await LoadData();
     }
 }
